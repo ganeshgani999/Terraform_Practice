@@ -9,7 +9,7 @@ resource "aws_vpc" "main_vpc" {
     })
 }
 
-# Internet Gateway
+# Internet Gateway # Siva Ganesh
 resource "aws_internet_gateway" "main_igw" {
     vpc_id = aws_vpc.main_vpc.id
 
