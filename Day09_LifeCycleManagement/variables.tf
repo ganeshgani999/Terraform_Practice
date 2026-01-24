@@ -22,9 +22,10 @@ variable "resource_creator" {
 
 # S3 Bucket Variables
 
-variable "bucket_names" {
+variable "bucket_name" {
   description = "Set of S3 bucket names to be created."
   type        = string
+  default = "s3-data-bucket"
 }
 
 # Ec2 Instance Variables
@@ -35,9 +36,20 @@ variable "instance_name" {
   default = [ "default_app_server" ]
 }
 
+#Error: instance_type expects a single string, but you defined vm_type as a list and accessed it with [0]; 
+#Fix: define vm_type as type = string (with validation if needed) and pass it directly to instance_type.  
 variable "vm_type" {
   description = "List of allowed VM types for deployment."
-  default     = [ "t2.micro" ]
+  type        = string
+  default     = "t2.micro"
+
+  validation {
+    condition = contains(
+      ["t2.micro", "t2.small", "t3.medium"],
+      var.vm_type
+    )
+    error_message = "vm_type must be one of 't2.micro', 't2.small', or 't3.medium'."
+  }
 }
 
 variable "allowed_zones" {
@@ -83,12 +95,6 @@ variable "db_name" {
 variable "Owner" {
     description = "The owner of the resources"
     type        = string
-}
-
-variable "resource_creator" {
-    description = "The creator of the resources"
-    type        = string
-    default     = "Siva Ganesh"
 }
 
 variable "ManagedBy" {
